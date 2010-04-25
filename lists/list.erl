@@ -1,7 +1,17 @@
 -module(list).
 -include_lib("eunit/include/eunit.hrl").
--export([reverse/1,filter/2,concat/1]).
+-export([reverse/1,filter/2,concat/1,flatten/1]).
 
+flatten(L) ->
+	flatten(L, []).	
+	
+flatten([], Acc) -> 
+    reverse(Acc); 
+flatten([H|T], Acc) ->
+	flatten(H, Acc) ++ flatten(T, Acc);
+flatten(H, Acc)	->	
+	flatten([], [H|Acc]).
+	
 filter(L, Index) ->
 	filter(L, [], 0, Index).
 	
