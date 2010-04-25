@@ -9,3 +9,7 @@ reverse_test() ->
 	
 concat_test() ->
 	?assertEqual([1,2,3,4,five], list:concat([[1,2,3], [], [4, five]])).
+	
+flatten_test() ->
+	?assertEqual([1,2,3,4,5,6], list:flatten([[1,[2,[3],[]]],[[[4]]],[5,6]])).
+	
