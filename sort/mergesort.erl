@@ -5,19 +5,31 @@
 
 mergesort([]) ->
 	[];
-mergesort(List) when length(List) > =/= 0 ->
+mergesort(List) when length(List) =:= 1 ->
 	List;
 mergesort(List) ->
-	debugMsg("Got here").
+	{Left, Right} = split(List),
+	{LeftResult, RightResult} = {mergesort(Left), mergesort(Right)},
+	merge(LeftResult, RightResult, []).
 	
-
+merge([L|Ltail], [R|RTail], Acc) when L =< R ->
+	merge(Ltail, [R|RTail], [L|Acc]);
+merge([L|Ltail], [R|RTail], Acc) when L > R ->
+	merge([L|Ltail], RTail, [R|Acc]);
+merge([H|T],[], Acc) ->
+	merge(T, [], [H|Acc]);
+merge([], [H|T], Acc) ->
+	merge(T, [], [H|Acc]);	
+merge([], [], Acc)	->
+	lists:reverse(Acc).
+	
 split([]) ->
 	[];
+split(List)	when length(List) =:= 1 ->
+	List;
 split(List) ->
 	Mid = ceiling(length(List, 0) / 2),
-	?debugVal(Mid),
 	{Left,Right} = split([], List, Mid, 0),
-	?debugVal({Left,Right}),
 	{Left, Right}.		
 	
 split(Left, [H|T], Mid, Pos) when Mid > Pos ->
@@ -32,7 +44,7 @@ length(List)	->
 	
 length([], Acc)	->
 	Acc;
-length([H|T], Acc) ->
+length([_H|T], Acc) ->
 	length(T, (Acc + 1)).
 	
 floor(X) ->
