@@ -1,6 +1,15 @@
+
 -module(mergesort).
 -include_lib("eunit/include/eunit.hrl").
 -export([split/1,mergesort/1,length/1,floor/1,ceiling/1]).
+
+mergesort([]) ->
+	[];
+mergesort(List) when length(List) > =/= 0 ->
+	List;
+mergesort(List) ->
+	debugMsg("Got here").
+	
 
 split([]) ->
 	[];
@@ -15,11 +24,6 @@ split(Left, [H|T], Mid, Pos) when Mid > Pos ->
 	split(Left ++ [H], T, Mid, (Pos + 1));	
 split(Left, Right, Mid, Pos) when Pos =:= Mid ->
 	{Left, Right}.		
-	
-mergesort([]) ->
-	[];
-mergesort([H|T]) ->
-	[H|T].
 
 length([]) ->
 	0;
