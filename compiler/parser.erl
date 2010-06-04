@@ -19,7 +19,9 @@ operand([$(|Text]) ->
   {Ast, Txt1};
 operand([H|T]) when ((H >= $0) and (H =< $9)) ->	
 	{Number, Remaining} = get_number([H|T], []),
-	{{num, list_to_integer(Number)},Remaining}.
+	{{num, list_to_integer(Number)},Remaining};
+operand(Digit) ->
+	{{num, Digit}, []}.
 	
 muls(Ast, []) -> {Ast, []};
 muls(Ast, [$*|Txt]) ->    
