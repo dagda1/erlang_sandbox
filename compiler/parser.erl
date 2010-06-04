@@ -1,36 +1,35 @@
 -module(parser).
 -include_lib("eunit/include/eunit.hrl").
--export([scan/1]).
+-export([parse/1]).
 
-scan(Text) ->
-	scan(Text, [], {0, 1}).	
-scan([$(|T], Scanned, {Depth, Column}) ->
-	scan(T, [{open_bracket, "(", {Depth + 1, Column}}|Scanned], {Depth + 1, Column + 1});	
-scan([$)|T], Scanned, {Depth, Column}) ->	
-	scan(T, [{close_bracket, ")", {Depth, Column}}| Scanned], {Depth - 1, Column + 1});
-scan([$+|T], Scanned, {Depth, Column}) -> 
-	scan(T, [{operator, "+", {Depth, Column}}|Scanned], {Depth, Column + 1});
-scan([H|T], Scanned, {Depth, Column}) when ((H >= $0) and (H =< $9)) ->
-	{Number, Remainder} = get_number([H|T], []),
-	scan(Remainder, [{number, Number, {Depth, Column}}|Scanned], {Depth, Column + 1});
-scan([], Scanned, {_Depth, _Column}) ->
-	%?debugVal(Depth),
-	lists:sort(fun
-				({_LIdentifier, _LCharacter, {LDepth, LColumn}}, {_RIdentifier, _RCharacter, {RDepth, RColumn}})	->
-					if
-						(LColumn < RColumn) ->
-							true;
-						true ->
-							false
-					end														
-	end, Scanned).
-%	lists:reverse(lists:map(fun
-%								({Identifier, Character, {_Depth, _Column}}) ->
-%										%?debugVal(Identifier)
-%										Character
-%							end, Scanned)).
-							
+parse(Text) ->
+	{Ast, []} = expression(Text),
+	Ast.
+	
+expression(Text) -> sum(Text).
+
+sum(Text) -> 
+	term(Text).
+	
+term(Text) ->
+	{Ast, Txt1} = factor(Text),
+	addops(Ast, Txt1).
+	
+factor([$(|Text]) ->
+  {Ast, [$) | Txt1]} = sum(Text),                 
+  {Ast, Txt1};
+factor([H|T]) when ((H >= $0) and (H =< $9)) ->	
+	{Number, Remaining} = get_number([H|T], []),
+	{{num, list_to_integer(Number)},Remaining}.
+	
+addops(Ast,[]) -> {Ast, []};
+addops(Ast,[$+|Text]) ->
+	{Ast1, Txt1} = term(Text),
+	Ast2 = {plus, Ast, Ast1},
+	addops(Ast2, Txt1);
+addops(Ast, Text) -> {Ast, Text}.
+	
 get_number([H|T], Acc) 	when ((H >= $0) and (H =< $9)) ->
 	get_number(T, [H|Acc]);
 get_number([H|T], Acc) ->
-	{lists:reverse(Acc), [H|T]}.					
+	{lists:reverse(Acc), [H|T]}.
