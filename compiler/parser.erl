@@ -14,6 +14,10 @@ term(Text) ->
 	{Ast, Txt1} = operand(Text),
 	muls(Ast, Txt1).
 	
+operand([$~|Text]) ->
+	{Ast, []} = expression(Text),
+	?debugVal(Ast),
+	{{unary_minus, Ast},[]};
 operand([$(|Text]) ->
   {Ast, [$) | Txt1]} = expression(Text),                 
   {Ast, Txt1};
@@ -25,11 +29,11 @@ operand(Digit) ->
 	
 muls(Ast, []) -> {Ast, []};
 muls(Ast, [$*|Txt]) ->    
-  {Ast1, Txt1} = operand(Txt),
+  {Ast1, Txt1} = term(Txt),
   Ast2 = {mul, Ast, Ast1},
   muls(Ast2, Txt1);
 muls(Ast, [$/|Txt]) ->                         
-  {Ast1, Txt1} = operand(Txt),
+  {Ast1, Txt1} = term(Txt),
   Ast2 = {dvd, Ast, Ast1},
   muls(Ast2, Txt1);
 muls(Ast, Txt) -> {Ast, Txt}.	
