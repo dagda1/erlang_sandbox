@@ -1,4 +1,4 @@
--module(compilertests).	
+-module(parsertests).	
 -include_lib("eunit/include/eunit.hrl").
 
 one_digit_test() ->

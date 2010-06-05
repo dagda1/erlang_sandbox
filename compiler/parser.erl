@@ -16,7 +16,6 @@ term(Text) ->
 	
 operand([$~|Text]) ->
 	{Ast, []} = expression(Text),
-	?debugVal(Ast),
 	{{unary_minus, Ast},[]};
 operand([$(|Text]) ->
   {Ast, [$) | Txt1]} = expression(Text),                 
