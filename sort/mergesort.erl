@@ -1,4 +1,3 @@
-
 -module(mergesort).
 -include_lib("eunit/include/eunit.hrl").
 -export([split/1,mergesort/1,length/1,floor/1,ceiling/1]).

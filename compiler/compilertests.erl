@@ -14,12 +14,10 @@ complex_parser_test() ->
 
 complex_multiply_parser_test() ->
 	List = parser:parse("((2*3)+(3/4))"),
-	?debugVal(List),
 	?assertEqual({plus,{mul,{num,2},{num,3}},{dvd,{num,3},{num,4}}}, List).
 	
 unary_parser_test() ->	
 	List = parser:parse("~((2*3)+(3*4))"),
-	?debugVal(List),
 	?assertEqual({unary_minus,{plus,{mul,{num,2},{num,3}},{mul,{num,3},{num,4}}}}, List).
 		
 		
