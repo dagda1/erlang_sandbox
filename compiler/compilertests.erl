@@ -18,8 +18,8 @@
 %	?assertEqual({plus,{mul,{num,2},{num,3}},{div,{num,3},{num,4}}}, List).
 	
 unary_parser_test() ->	
-	List = parser:parse("~((2*3)~(3*4))"),
+	List = parser:parse("~((2*3)+(3*4))"),
 	?debugVal(List),
-	?assertEqual({unary_minus,{unary_minus,{mul,{num,2},{num,3}},{mul,{num,3},{num,4}}}}, List).
+	?assertEqual({unary_minus,{plus,{mul,{num,2},{num,3}},{mul,{num,3},{num,4}}}}, List).
 		
 		
