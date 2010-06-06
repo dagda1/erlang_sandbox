@@ -3,6 +3,6 @@
 
 simple_evaluator_test() ->
 	Ast = parser:parse("(12+3)"),
-	Res = evaluater:evaluate(Ast),
+	Res = evaluator:evaluate(Ast),
 	?debugVal(Res).
 
