@@ -12,21 +12,18 @@
 -module (compilertests).
 -include_lib("eunit/include/eunit.hrl").
 
-%simple_compiler_test() ->
-%	Ast = parser:parse("(2+3)"),
-%	Res = compiler:compile(Ast),
-%	?assertEqual([[plus,2,3]], Res).
+simple_compiler_test() ->
+	Ast = parser:parse("(12+3)"),
+	Res = compiler:compile(Ast),
+	?assertEqual(15, Res).
 	
 complex_compiler_test() ->
 	Ast = parser:parse("((12+3)-4)"),
 	Res = compiler:compile(Ast),
-	?debugVal(Res).
-%	?assertEqual([[plus,2,3]], Res).
+	?assertEqual(11, Res).
 
-%complex_multiply_compiler_test() ->
-%	Ast = parser:parse("((2*3)+(6/2))"),
-%	Res = compiler:compile(Ast).
+complex_multiply_compiler_test() ->
+	Ast = parser:parse("((2*3)+(6/2))"),
+	Res = compiler:compile(Ast),
+	?assertEqual(9.0, Res).
 
-%unary_compiler_test() ->	
-%	Ast = parser:parse("~((2*3)+(3*4))"),
-%	Res = compiler:compile(Ast).

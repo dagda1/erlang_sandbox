@@ -4,19 +4,26 @@
 
 %{plus,{num,12},{num,3}}
 
+compile({Operator, Left, Right}) ->
+	LeftResult = compileExpression(Left),
+	RightResult = compileExpression(Right),
+	pop({Operator, LeftResult,RightResult});
 compile(Ast) ->
-	compile(Ast, []).
-	
-compile({Operator, Left, Right}, Stack) ->
-	LeftResult = compileExpression(Left, Stack),
-	RightResult = lists:reverse(compileExpression(Right, LeftResult)),
-	?debugVal(LeftResult),
-	?debugVal(RightResult),
-	?debugVal(Operator),
-	[[Operator|RightResult]|Stack].
+	compile(Ast).
 
-compileExpression({num, Number}, Stack) ->
-	[Number|Stack];
-compileExpression(Ast, Stack) ->
-	Res = compile(Ast, Stack),
+pop({mul, Left, Right}) ->
+	Left * Right;
+pop({dvd, Left, Right}) ->
+	Left / Right;	
+pop({plus, Left, Right}) ->
+	Left + Right;
+pop({minus, Left, Right}) ->
+	Left - Right.
+	
+	
+
+compileExpression({num, Number}) ->
+	Number;
+compileExpression(Ast) ->
+	Res = compile(Ast),
 	Res.	
