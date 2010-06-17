@@ -1,6 +1,5 @@
 %All arithemetic operations take place using the top two positions on the stack; one operand push and pop instructions are used to access
 %memory; push a push b add. pop c
-%string:tokens(Line, " "),
 %pop_two(Stack) ->
 %	[Alpha|[Bravo|Remain]] = Stack,
 %	{Alpah, Bravo, Remain}.
