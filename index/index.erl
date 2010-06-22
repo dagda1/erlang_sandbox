@@ -14,33 +14,36 @@ index(Filename) ->
 
 indexFile(IoDevice) ->
     RawDocument = loadRawDocument([], IoDevice, 1),
+	?debugVal(RawDocument),
     file:close(IoDevice),
-    ok.
+    ok,
+	printDocument(RawDocument).
+	
+printDocument(Document) ->
+	?debugVal(Document).
 
-loadRawDocument(Lines, IoDevice, LineNumber) ->
+loadRawDocument(Index, IoDevice, LineNumber) ->
     case file:read_line(IoDevice) of
         {ok, Line} -> 
-			A = parseLine(Line, LineNumber),
-			loadRawDocument([Line|Lines], IoDevice, LineNumber + 1);
-        eof -> lists:reverse(Lines)
+			NewIndex = parseLine(Line, LineNumber, Index),
+			loadRawDocument(NewIndex, IoDevice, LineNumber + 1);
+        eof -> lists:reverse(Index)
     end.
 
-parseLine(Line, LineNumber) ->
-	OneLine = string:tokens(Line, "\r\n\t {,}->:;[]().|\\=/ ?"),
-	Acc = lists:foldr(fun(Word, List) -> 
-	CurrenyKey = string:to_lower(Word),
-	Value = case lists:keyfind(CurrenyKey, 1, List) of
+parseLine(Line, LineNumber, Index) ->
+	OneLine = lists:reverse(string:tokens(Line, "\r\n\t {,}->:;[]().|\\=/ ?")),
+	updateIndex(OneLine, LineNumber, Index).
+	
+updateIndex([], _LineNumber, Index) ->
+	Index;
+updateIndex([H|T], LineNumber, Index) ->
+	CurrenyKey = string:to_lower(H),
+	Value = case lists:keyfind(CurrenyKey, 1, Index) of
 				false ->
 					[];
 				{_Y, Found} ->
-					?debugVal(_Y),
-					?debugVal(Found),
 					Found
-			end,
-			?debugVal(Value),
-			NewList = lists:keystore(CurrenyKey, 1, List, {CurrenyKey, [1|Value]}),
-			?debugVal(NewList),
-			NewList
-		end, "", OneLine),
-		Acc.
+				end,
+	NewIndex = lists:keystore(CurrenyKey, 1, Index, {CurrenyKey, lists:sort([LineNumber|Value])}),
+	updateIndex(T, LineNumber, NewIndex).
 
